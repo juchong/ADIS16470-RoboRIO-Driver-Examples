@@ -37,6 +37,8 @@ public class Robot extends TimedRobot {
   private boolean m_configCal = false;
   private boolean m_reset = false;
   private boolean m_setYawAxis = false;
+  private double m_decRate = 4;
+  private boolean m_setDecRate = false;
 
   private final ADIS16470_IMU m_imu = new ADIS16470_IMU();
 
@@ -58,6 +60,9 @@ public class Robot extends TimedRobot {
     SmartDashboard.putBoolean("ConfigCal", false);
     SmartDashboard.putBoolean("Reset", false);
     SmartDashboard.putBoolean("SetYawAxis", false);
+    SmartDashboard.putBoolean(("SetDecRate"), false);
+
+    SmartDashboard.putNumber(("DecRate"), m_decRate);
   }
 
   /**
@@ -77,6 +82,8 @@ public class Robot extends TimedRobot {
     m_configCal = SmartDashboard.getBoolean("ConfigCal", false);
     m_reset = SmartDashboard.getBoolean("Reset", false);
     m_setYawAxis = SmartDashboard.getBoolean("SetYawAxis", false);
+    m_setDecRate = SmartDashboard.getBoolean("SetDecRate", false);
+    m_decRate = SmartDashboard.getNumber("DecRate", 4.0);
     m_yawSelected = m_yawChooser.getSelected();
 
     // Set IMU settings
@@ -91,6 +98,10 @@ public class Robot extends TimedRobot {
     if (m_runCal) {
       m_imu.calibrate();
       m_runCal = SmartDashboard.putBoolean("RunCal", false);
+    }
+    if (m_setDecRate) {
+      m_imu.configDecRate((int)m_decRate);
+      m_setDecRate = SmartDashboard.putBoolean("SetDecRate", false);
     }
     
     // Read the desired yaw axis from the dashboard

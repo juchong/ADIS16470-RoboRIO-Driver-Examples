@@ -23,6 +23,8 @@ void Robot::RobotInit() {
   frc::SmartDashboard::PutBoolean("ConfigCal", false);
   frc::SmartDashboard::PutBoolean("Reset", false);
   frc::SmartDashboard::PutBoolean("SetYawAxis", false);
+  frc::SmartDashboard::PutBoolean("SetDecRate", false);
+  frc::SmartDashboard::PutNumber("DecRate", m_decRate);
 }
 
 /**
@@ -37,6 +39,8 @@ void Robot::RobotPeriodic() {
   frc::SmartDashboard::PutNumber("YawAngle", m_imu.GetAngle());
   frc::SmartDashboard::PutNumber("XCompAngle", m_imu.GetXComplementaryAngle());
   frc::SmartDashboard::PutNumber("YCompAngle", m_imu.GetYComplementaryAngle());
+  m_setDecRate = frc::SmartDashboard::GetBoolean("SetDecRate", false);
+  m_decRate = frc::SmartDashboard::GetNumber("DecRate", 4);
   m_runCal = frc::SmartDashboard::GetBoolean("RunCal", false);
   m_configCal = frc::SmartDashboard::GetBoolean("ConfigCal", false);
   m_reset = frc::SmartDashboard::GetBoolean("Reset", false);
@@ -55,6 +59,10 @@ void Robot::RobotPeriodic() {
   if (m_runCal) {
     m_imu.Calibrate();
     m_runCal = frc::SmartDashboard::PutBoolean("RunCal", false);
+  }
+  if (m_setDecRate) {
+    m_imu.ConfigDecRate(m_decRate);
+    m_setDecRate = frc::SmartDashboard::PutBoolean("SetDecRate", false);
   }
   
   // Read the desired yaw axis from the dashboard

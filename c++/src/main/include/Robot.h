@@ -39,5 +39,7 @@ class Robot : public frc::TimedRobot {
   bool m_configCal = false;
   bool m_reset = false;
   bool m_setYawAxis = false;
+  uint16_t m_decRate = 4;
+  bool m_setDecRate = false;
   frc::ADIS16470_IMU::IMUAxis m_yawActiveAxis = frc::ADIS16470_IMU::IMUAxis::kZ;
 };
